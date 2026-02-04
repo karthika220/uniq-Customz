@@ -1147,8 +1147,18 @@ a.cta-btn:hover {
         align-items: center;
     }
 
-    .cta-btn {
+    .phone-btn {
         display: none;
+    }
+
+    .cta-btn {
+        display: inline-block;
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+
+    .nav-actions {
+        gap: 10px;
     }
 
     .hero-title {
@@ -1263,6 +1273,18 @@ a.cta-btn:hover {
         width: 100%;
         max-width: 100%;
         aspect-ratio: 16 / 10;
+    }
+
+    .ppf-buttons {
+        flex-direction: column;
+        width: 100%;
+        align-items: stretch;
+    }
+
+    .ppf-buttons .btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
     }
 
     /* FAQ mobile */
