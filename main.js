@@ -108,22 +108,37 @@ function getVisibleCards() {
 // Update slider position
 function updateSlider() {
     if (reviews.length === 0 || !reviewsContainer) return;
-    const firstCard = reviews[0];
-    const slideWidth = firstCard.offsetWidth;
     const viewport = reviewsContainer.parentElement;
-    const visibleCards = getVisibleCards();
+    if (!viewport) return;
     
-    // Calculate maximum slide position to prevent gap
+    const visibleCards = getVisibleCards();
     const maxSlide = Math.max(0, totalReviews - visibleCards);
     
     // Ensure we don't show gap at the end
     let slidePosition = currentSlide;
     if (slidePosition > maxSlide) {
         slidePosition = maxSlide;
+        currentSlide = slidePosition;
     }
     
-    const translateX = slidePosition * slideWidth;
-    reviewsContainer.style.transform = `translateX(-${translateX}px)`;
+    // Calculate translateX using actual card width including gap
+    const firstCard = reviews[0];
+    if (!firstCard) return;
+    
+    const cardRect = firstCard.getBoundingClientRect();
+    const cardWidth = cardRect.width;
+    
+    // Get computed gap from CSS (20px)
+    const gap = 20;
+    
+    // Calculate translateX: card width + gap for each slide
+    const translateX = slidePosition * (cardWidth + gap);
+    
+    // Ensure we don't go beyond the maximum position
+    const maxTranslateX = maxSlide * (cardWidth + gap);
+    const finalTranslateX = Math.min(translateX, maxTranslateX);
+    
+    reviewsContainer.style.transform = `translateX(-${finalTranslateX}px)`;
 }
 
 // Next button - loop to start when reaching end
@@ -157,6 +172,7 @@ if (prevBtn) {
         updateSlider();
     });
 }
+
 
 // Handle window resize - slider update is handled in the main resize handler below
 
@@ -368,8 +384,10 @@ window.addEventListener('resize', () => {
             hamburger.classList.remove('active');
         }
         // Ensure slider position is valid after resize
-        if (currentSlide >= totalReviews) {
-            currentSlide = 0;
+        const visibleCards = getVisibleCards();
+        const maxSlide = Math.max(0, totalReviews - visibleCards);
+        if (currentSlide > maxSlide) {
+            currentSlide = maxSlide;
         }
         updateSlider();
     }, 250);
