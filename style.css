@@ -90,7 +90,10 @@ video {
     cursor: pointer;
     transition: var(--transition);
     text-decoration: none;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .btn-primary {
@@ -1078,10 +1081,17 @@ video {
     .hero-buttons {
         flex-direction: column;
         width: 100%;
+        align-items: stretch;
     }
 
     .hero-buttons .btn {
         width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+    
+    .hero-buttons .btn-secondary {
+        text-align: center;
     }
 
     .section-title {
