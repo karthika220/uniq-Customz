@@ -130,8 +130,8 @@ function updateSlider() {
     const cardRect = firstCard.getBoundingClientRect();
     const cardWidth = cardRect.width;
     
-    // Get computed gap from CSS (20px)
-    const gap = 20;
+    // Get computed gap from CSS (20px desktop, 15px mobile)
+    const gap = window.innerWidth <= 768 ? 15 : 20;
     
     // Calculate translateX: card width + gap for each slide
     const translateX = slidePosition * (cardWidth + gap);
@@ -181,6 +181,79 @@ if (prevBtn) {
 // Initialize slider position
 if (reviewsContainer) {
     updateSlider();
+}
+
+// ==========================================
+// Touch/Swipe Support for Mobile
+// ==========================================
+let touchStartX = 0;
+let touchEndX = 0;
+let isDragging = false;
+
+if (reviewsContainer) {
+    // Touch start
+    reviewsContainer.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        isDragging = true;
+        reviewsContainer.style.transition = 'none';
+    }, { passive: true });
+
+    // Touch move
+    reviewsContainer.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        touchEndX = e.touches[0].clientX;
+        const diff = touchStartX - touchEndX;
+        const firstCard = reviews[0];
+        if (!firstCard) return;
+        
+        const cardRect = firstCard.getBoundingClientRect();
+        const cardWidth = cardRect.width;
+        const gap = window.innerWidth <= 768 ? 15 : 20;
+        const currentTranslate = currentSlide * (cardWidth + gap);
+        const newTranslate = currentTranslate + diff;
+        
+        // Prevent dragging beyond limits
+        const visibleCards = getVisibleCards();
+        const maxSlide = Math.max(0, totalReviews - visibleCards);
+        const maxTranslate = maxSlide * (cardWidth + gap);
+        
+        if (newTranslate >= 0 && newTranslate <= maxTranslate) {
+            reviewsContainer.style.transform = `translateX(-${newTranslate}px)`;
+        }
+    }, { passive: true });
+
+    // Touch end
+    reviewsContainer.addEventListener('touchend', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        reviewsContainer.style.transition = 'transform 0.5s ease';
+        
+        const diff = touchStartX - touchEndX;
+        const swipeThreshold = 50; // Minimum swipe distance
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            const visibleCards = getVisibleCards();
+            const maxSlide = Math.max(0, totalReviews - visibleCards);
+            
+            if (diff > 0) {
+                // Swipe left - next
+                if (currentSlide < maxSlide) {
+                    currentSlide++;
+                } else {
+                    currentSlide = 0;
+                }
+            } else {
+                // Swipe right - previous
+                if (currentSlide > 0) {
+                    currentSlide--;
+                } else {
+                    currentSlide = maxSlide;
+                }
+            }
+        }
+        
+        updateSlider();
+    }, { passive: true });
 }
 
 // ==========================================
