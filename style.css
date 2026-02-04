@@ -27,6 +27,8 @@ body {
     color: var(--text-white);
     line-height: 1.6;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
@@ -37,10 +39,16 @@ body {
 
 img {
     max-width: 100%;
+    height: auto;
     display: block;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
     image-rendering: auto;
+}
+
+video {
+    max-width: 100%;
+    height: auto;
 }
 
 /* ==========================================
@@ -187,6 +195,9 @@ img {
     cursor: pointer;
     transition: var(--transition);
     box-shadow: 0 4px 15px rgba(0, 200, 255, 0.3);
+    min-width: 44px;
+    min-height: 44px;
+    touch-action: manipulation;
 }
 
 .phone-btn:hover {
@@ -224,6 +235,10 @@ img {
     background: none;
     border: none;
     cursor: pointer;
+    padding: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    touch-action: manipulation;
 }
 
 .hamburger span {
@@ -258,6 +273,12 @@ img {
     height: 100%;
     object-fit: cover;
     z-index: 0;
+}
+
+@media (max-width: 768px) {
+    .hero-video {
+        object-position: center;
+    }
 }
 
 .hero-overlay {
@@ -1016,11 +1037,14 @@ img {
         width: 100%;
         height: calc(100vh - 80px);
         background: rgba(13, 27, 42, 0.98);
+        backdrop-filter: blur(10px);
         flex-direction: column;
         align-items: center;
         justify-content: center;
         gap: 30px;
         transition: var(--transition);
+        z-index: 999;
+        overflow-y: auto;
     }
 
     .nav-menu.active {
@@ -1029,6 +1053,14 @@ img {
 
     .hamburger {
         display: flex;
+    }
+    
+    .nav-link {
+        font-size: 18px;
+        padding: 12px 0;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
     }
 
     .cta-btn {
@@ -1080,10 +1112,36 @@ img {
     .reviews-slider {
         padding: 0;
     }
+    
+    .reviews-track {
+        gap: 15px;
+    }
+    
+    .review-card {
+        flex: 0 0 calc(100% - 15px);
+        max-width: calc(100% - 15px);
+    }
 
     .why-choose-images,
     .ppf-images {
         grid-template-columns: 1fr;
+        margin-left: 0;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    
+    .ppf-images {
+        margin-left: 0;
+        justify-content: center;
+    }
+    
+    .ppf-images img {
+        margin: 0 auto;
+        width: 100%;
+        max-width: 100%;
     }
 
     /* FAQ mobile */
@@ -1117,5 +1175,25 @@ img {
     .btn {
         width: 100%;
         text-align: center;
+        min-height: 44px;
+        touch-action: manipulation;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+    
+    .about,
+    .why-choose,
+    .services,
+    .ppf-maintenance,
+    .contact,
+    .faq {
+        padding: 60px 0;
+    }
+    
+    .hero {
+        padding-top: 80px;
+        min-height: 90vh;
     }
 }
